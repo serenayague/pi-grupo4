@@ -11,8 +11,8 @@ function Perfil(props) {
         setUser(usuarioActual);
 
         if (usuarioActual) {
-            db.collection("posts")
-                .where("email", "==", usuarioActual.email)
+            db.collection("comentarios")
+                .where("owner", "==", usuarioActual.email)
                 .onSnapshot(docs => {
                     let posteosDelUsuario = [];
 
@@ -59,7 +59,7 @@ function Perfil(props) {
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.post}>
-                        <Text>{item.data.texto}</Text>
+                        <Text>{item.data.comentario}</Text>
                     </View>
                 )}
                 ListEmptyComponent={
