@@ -1,8 +1,8 @@
 import { Pressable, View, Text, StyleSheet, FlatList, ActivityIndicator, Image } from "react-native";
 import { auth, db } from "../firebase/config";
+import firebase from "../firebase/config";
 import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import firebase from 'firebase';
 
 function Home(props) {
     const [posteos, setPosteos] = useState([])
@@ -31,7 +31,9 @@ function Home(props) {
     }, [])
 
     function handleLike(posteo) {
-        const userId = auth.currentUser.email
+        const userId = auth.currentUser?.email;
+        if (!userId) return;
+
         const likes = posteo.data.likes || []
         const yaLikeo = likes.includes(userId)
 
@@ -54,9 +56,9 @@ function Home(props) {
                         data={posteos}
                         keyExtractor={item => item.id.toString()}
                         renderItem={({ item }) => {
-                            const userId = auth.currentUser.email
+                            const userId = auth.currentUser?.email || ""
                             const likes = item.data.likes || []
-                            const yaLikeo = likes.includes(userId)
+                            const yaLikeo = userId ? likes.includes(userId) : false
 
                             return (
                                 <View style={styles.post}>
