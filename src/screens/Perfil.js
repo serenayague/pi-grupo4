@@ -11,8 +11,8 @@ function Perfil(props) {
         setUser(usuarioActual);
 
         if (usuarioActual) {
-            db.collection("comentarios")
-                .where("owner", "==", usuarioActual.email)
+            db.collection("posteos")
+                .where("email", "==", usuarioActual.email)
                 .onSnapshot(docs => {
                     let posteosDelUsuario = [];
 
@@ -31,13 +31,19 @@ function Perfil(props) {
     function logout() {
         auth.signOut()
             .then(() => {
-                props.navigation.getParent().navigate("login");
+                props.navigation.navigate("login");
             })
             .catch(error => {
                 console.log(error);
             });
     }
-
+     
+    function eliminarPosteo(id) {
+        db.collection("posteos")
+          .doc(id)
+          .delete()
+      .catch(error => console.log(error));
+  }
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Mi Perfil</Text>
@@ -62,10 +68,12 @@ function Perfil(props) {
                         <Text>{item.data.comentario}</Text>
                     </View>
                 )}
-                ListEmptyComponent={
-                    <Text style={styles.empty}>Todavía no hiciste posteos</Text>
-                }
-            />
+                />
+
+                {posteos.length === 0
+                   ? <Text style={styles.empty}>Todavía no hiciste posteos</Text>
+                   : null
+               }
 
             <Pressable onPress={() => logout()}>
                 <Text style={styles.logout}>Cerrar sesión</Text>

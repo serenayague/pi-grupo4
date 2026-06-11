@@ -7,26 +7,26 @@ function CrearPosteo(props) {
     const [error, setError] = useState("");
 
     function onSubmit() {
-        if (comment === "") {
-            setError("El comentario no puede estar vacío");
-            return;
-        }
+  if (comment === "") {
+    setError("El comentario no puede estar vacío");
+    return;
+  }
 
-        db.collection("comentarios").add({
-            owner: auth.currentUser.email,
-            comentario: comment,
-            createdAt: Date.now(),
-            likes: []
-        })
-        .then(() => {
-            setComment("");
-            props.navigation.navigate("stackmenu");
-        })
-        .catch(error => {
-            console.log(error);
-            setError("No se pudo publicar el post");
-        });
-    }
+  db.collection("posteos").add({
+    email: auth.currentUser.email,
+    descripcion: comment,
+    createdAt: Date.now(),
+    likes: []
+  })
+  .then(() => {
+    setComment("");
+    props.navigation.navigate("stackmenu");
+  })
+  .catch(error => {
+    console.log(error);
+    setError("No se pudo publicar el post");
+  });
+}
 
     return (
         <View style={styles.container}>
