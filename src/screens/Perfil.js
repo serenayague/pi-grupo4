@@ -38,12 +38,6 @@ function Perfil(props) {
             });
     }
      
-    function eliminarPosteo(id) {
-        db.collection("posteos")
-          .doc(id)
-          .delete()
-      .catch(error => console.log(error));
-  }
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Mi Perfil</Text>
