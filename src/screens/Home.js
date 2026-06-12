@@ -31,10 +31,10 @@ function Home(props) {
     }, [])
 
     function handleLike(posteo) {
-        const userId = auth.currentUser?.email;
+        const userId = auth.currentUser? auth.currentUser.email: null;
         if (!userId) return;
 
-        const likes = posteo.data.likes || []
+        const likes = posteo.data.likes ? posteo.data.likes : []
         const yaLikeo = likes.includes(userId)
 
         db.collection("posteos")
@@ -57,26 +57,20 @@ function Home(props) {
                         keyExtractor={item => item.id.toString()}
                         renderItem={({ item }) => {
                             const userId = auth.currentUser?.email || ""
-                            const likes = item.data.likes || []
+                            const likes = item.data.likes ? item.data.likes : []
                             const yaLikeo = userId ? likes.includes(userId) : false
 
                             return (
                                 <View style={styles.post}>
 
                                     <Text style={styles.postOwner}>
-                                        {item.data.nombreUsuario || item.data.email}
+                                        {item.data.nombreUsuario ? item.data.nombreUsuario : item.data.email}
                                     </Text>
 
                                     <Text style={styles.postTexto}>
                                         {item.data.descripcion}
                                     </Text>
 
-                                    {item.data.imagen &&
-                                        <Image
-                                            source={{ uri: item.data.imagen }}
-                                            style={styles.imagen}
-                                        />
-                                    }
 
                                     <View style={styles.acciones}>
 
