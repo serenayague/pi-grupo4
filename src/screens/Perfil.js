@@ -7,26 +7,32 @@ function Perfil(props) {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const usuarioActual = auth.currentUser;
-        setUser(usuarioActual);
+  auth.onAuthStateChanged(usuarioActual => {
+    if (usuarioActual) {
 
-        if (usuarioActual) {
-            db.collection("posteos")
-                .where("email", "==", usuarioActual.email)
-                .onSnapshot(docs => {
-                    let posteosDelUsuario = [];
+      db.collection("users")
+        .where("email", "==", usuarioActual.email)
+        .onSnapshot(docs => {
+          docs.forEach(doc => {
+            setUser({ ...usuarioActual, displayName: doc.data().username });
+          });
+        });
 
-                    docs.forEach(doc => {
-                        posteosDelUsuario.push({
-                            id: doc.id,
-                            data: doc.data()
-                        });
-                    });
-
-                    setPosteos(posteosDelUsuario);
-                });
-        }
-    }, []);
+      db.collection("posteos")
+        .where("email", "==", usuarioActual.email)
+        .onSnapshot(docs => {
+          let posteosDelUsuario = [];
+          docs.forEach(doc => {
+            posteosDelUsuario.push({
+              id: doc.id,
+              data: doc.data()
+            });
+          });
+          setPosteos(posteosDelUsuario);
+        });
+    }
+  });
+}, []);
 
     function logout() {
         auth.signOut()
